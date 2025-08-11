@@ -1,205 +1,255 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sarvesh Patki - Personal Portfolio</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sarvesh Patki — Personal Portfolio</title>
   <link rel="icon" href="https://i.ibb.co/ZsFxdkQ/d075f8140e6c227ce55ed9caea97e36b.gif" type="image/gif" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    body {
-      background: repeating-linear-gradient(
-        -45deg,
-        #1e3a8a 0%,
-        #1e3a8a 25%,
-        #000000 50%,
-        #1e3a8a 75%,
-        #000000 100%
-      );
-      background-size: 400% 400%;
-      animation: gradientBG 30s linear infinite;
+    :root{
+      --glass: rgba(255,255,255,0.06);
+      --accent-1: #60a5fa;
+      --accent-2: #3b82f6;
+      --accent-3: #2563eb;
+    }
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;color:#e6eef8;overflow-x:hidden;}
+
+    /* Layered animated background: moving gradient + subtle texture */
+    body{
+      background:
+        /* slow moving linear gradient (gives wave-like motion via position animation) */
+        linear-gradient(120deg, rgba(37,99,235,0.06) 0%, rgba(37,99,235,0.02) 25%, rgba(0,0,0,0.0) 50%, rgba(37,99,235,0.02) 75%, rgba(37,99,235,0.06) 100%),
+        /* darker base */
+        linear-gradient(180deg,#071233 0%, #020617 100%);
+      background-size: 400% 400%, 100% 100%;
+      animation: bgShift 28s linear infinite;
+    }
+    @keyframes bgShift {
+      0%{ background-position: 0% 50%, 0 0; }
+      50%{ background-position: 100% 50%, 0 0; }
+      100%{ background-position: 0% 50%, 0 0; }
     }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+    /* subtle grid overlay */
+    .grid-bg{position:fixed;inset:0;opacity:0.03;pointer-events:none;background-image:
+      linear-gradient(0deg,rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size:140px 140px,140px 140px;z-index:0}
 
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 1s forwards;
-    }
-    .fade-in.delay-1 { animation-delay: 0.5s; }
-    .fade-in.delay-2 { animation-delay: 1s; }
-    .fade-in.delay-3 { animation-delay: 1.5s; }
-    .fade-in.delay-4 { animation-delay: 2s; }
+    /* floating SVG wave near top (non-intrusive) */
+    .wave-wrap{position:fixed;left:-20%;top:6%;width:140%;height:320px;pointer-events:none;opacity:0.06;z-index:0;overflow:hidden}
+    .wave{width:200%;height:100%;transform:translateX(0);animation:waveMove 18s linear infinite}
+    @keyframes waveMove{0%{transform:translateX(0)}50%{transform:translateX(-20%)}100%{transform:translateX(0)}}
 
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+    /* cards / glass */
+    .fade-in{opacity:0;transform:translateY(16px);animation:fadeInUp 900ms ease forwards}
+    @keyframes fadeInUp{to{opacity:1;transform:none}}
+    .glass{background:var(--glass);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.04);border-radius:14px}
+    .card{box-shadow:0 8px 30px rgba(2,6,23,0.6)}
 
-    .gradient-text {
-      background: linear-gradient(to right, #60a5fa, #3b82f6, #2563eb);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: transparent;
-    }
+    .gradient-text{background:linear-gradient(90deg,var(--accent-1),var(--accent-2),var(--accent-3));-webkit-background-clip:text;background-clip:text;color:transparent}
 
-    .border-gradient {
-      position: relative;
-      border-radius: 1rem;
-      overflow: hidden;
-      z-index: 0;
-    }
-
-    .border-gradient::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      padding: 2px;
-      background: linear-gradient(90deg, #f97316, #fb923c, #f59e0b); /* Orange by default */
-      border-radius: inherit;
+    /* pills: neutral by default, blue gradient on hover */
+    .pill{position:relative;border-radius:9999px;overflow:hidden;display:block}
+    .pill::before{content:"";position:absolute;inset:0;padding:2px;background:transparent;border-radius:9999px;
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-              mask-composite: exclude;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      transition: background 0.4s ease;
-    }
+      -webkit-mask-composite: xor;mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;transition:background 220ms ease,transform 220ms ease}
+    .pill:hover::before{background:linear-gradient(90deg,#60a5fa,#3b82f6,#2563eb);transform:scale(1.02)}
+    .pill .inner{background:transparent;padding:.55rem 1rem;border-radius:9999px;display:flex;align-items:center;gap:.5rem}
 
-    .border-gradient:hover::before {
-      background: linear-gradient(90deg, #3b82f6, #60a5fa, #2563eb); /* Blue on hover */
-    }
+    /* typing caret */
+    .caret{display:inline-block;width:2px;height:1.05em;background:linear-gradient(180deg,#fff,#d1e3ff);margin-left:6px;vertical-align:middle;animation:blinkCaret 700ms steps(1) infinite}
+    @keyframes blinkCaret{50%{opacity:0}}
+    .caret.hide{display:none}
+    @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 
-    .inner {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 0.875rem;
-      padding: 1.5rem;
-      height: 100%;
-    }
+    /* Experience styling */
+    .xp-list{display:flex;flex-direction:column;gap:.6rem;margin-top:.6rem}
+    .xp-item{display:flex;flex-direction:column;padding:.9rem;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
+    .xp-meta{font-size:.93rem;color:#cfe6ff;margin-top:.35rem;line-height:1.25}
+    .xp-role{font-weight:700}
+    .links a{color:#cfe6ff;text-decoration:underline}
 
-    .typing-wrapper {
-      display: inline-block;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 2px solid white;
-      width: 0;
-      animation: typing 3s steps(30, end) forwards;
-      animation-delay: 2.6s;
-      position: relative;
-    }
-
-    .typing-wrapper.done {
-      border-right: none;
-    }
-
-    .typing-text {
-      background: linear-gradient(to right, #60a5fa, #3b82f6, #2563eb);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      color: transparent;
-    }
-
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 23ch; }
-    }
-
-    .typing-wrapper::after {
-      content: "";
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: white;
-      margin-left: 2px;
-      animation: blink 0.6s step-end 6;
-      animation-fill-mode: forwards;
-      animation-delay: 2.6s;
-      position: absolute;
-      right: 0;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
+    /* responsive container tweaks */
+    .hero-sub{max-width:58ch;color:#d9e9ff}
   </style>
 </head>
-<body class="font-sans text-white">
-  <header class="w-full flex items-center px-6 py-6 bg-black bg-opacity-40 shadow-md text-xl sm:text-2xl font-bold fade-in delay-1">
-    <img src="https://i.ibb.co/ZsFxdkQ/d075f8140e6c227ce55ed9caea97e36b.gif" alt="Sarvesh Logo" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full mr-4">
-    <span class="gradient-text">Sarvesh Patki</span>
-  </header>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
 
-  <main class="min-h-screen flex flex-col items-center justify-center px-6 py-12 space-y-12">
-    <div class="text-center max-w-4xl fade-in delay-2 w-full space-y-10">
-      <div class="flex flex-col items-center space-y-4">
-        <img src="https://i.ibb.co/ZsFxdkQ/d075f8140e6c227ce55ed9caea97e36b.gif" alt="Sarvesh Avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full">
-        <h1 class="text-2xl sm:text-3xl font-semibold h-10">
-          <span class="typing-wrapper" id="typing"><span class="typing-text">Hi!, I am Sarvesh Patki</span></span>
-        </h1>
-      </div>
+  <!-- decorative drifting SVG wave -->
+  <div class="wave-wrap" aria-hidden="true">
+    <svg class="wave" viewBox="0 0 1440 320" preserveAspectRatio="xMinYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#60a5fa" fill-opacity="0.08" d="M0,96L40,106.7C80,117,160,139,240,149.3C320,160,400,160,480,144C560,128,640,96,720,117.3C800,139,880,213,960,234.7C1040,256,1120,224,1200,213.3C1280,203,1360,213,1400,218.7L1440,224L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"></path>
+    </svg>
+  </div>
 
-      <p class="text-base sm:text-lg md:text-xl gradient-text px-2">
-        I'm a passionate tech enthusiast currently learning Linux and working toward becoming a Cloud Engineer.
-      </p>
-
-      <div class="border-gradient fade-in delay-3 mx-2">
-        <div class="inner shadow-xl backdrop-blur-sm">
-          <p class="gradient-text">
-            Welcome to my personal site! I’m always experimenting with new technologies — from web hosting and server deployment to shell scripting and containerization. I love sharing what I learn and building cool stuff with open-source tools.
-          </p>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap justify-center gap-6 fade-in delay-4 px-2">
-        <a href="mailto:phonesarvesh95@gmail.com" target="_blank" class="border-gradient rounded-full flex items-center gap-2 px-4 py-2">
-          <div class="inner flex items-center gap-2">
-            <img src="https://i.ibb.co/9HSqjHZR/email.png" alt="email" class="w-6 h-6 rounded-full"> <span class="text-white">Email</span>
-          </div>
-        </a>
-        <a href="https://github.com/SarveshPatki" target="_blank" class="border-gradient rounded-full flex items-center gap-2 px-4 py-2">
-          <div class="inner flex items-center gap-2">
-            <img src="https://i.ibb.co/GQyvXfcH/github.png" alt="github" class="w-6 h-6 rounded-full"> <span class="text-white">GitHub</span>
-          </div>
-        </a>
-        <a href="https://discord.com/users/741184115981680702" target="_blank" class="border-gradient rounded-full flex items-center gap-2 px-4 py-2">
-          <div class="inner flex items-center gap-2">
-            <img src="https://i.ibb.co/2Y5hfgk8/discord.jpg" alt="discord" class="w-6 h-6 rounded-full"> <span class="text-white">Discord</span>
-          </div>
-        </a>
-        <a href="https://www.reddit.com/user/maybe in future" target="_blank" class="border-gradient rounded-full flex items-center gap-2 px-4 py-2">
-          <div class="inner flex items-center gap-2">
-            <img src="https://i.ibb.co/fdxywY36/reddit.jpg" alt="reddit" class="w-6 h-6 rounded-full"> <span class="text-white">Reddit</span>
-          </div>
-        </a>
-      </div>
-
-      <div class="border-gradient fade-in delay-4 mx-2">
-        <div class="inner shadow-xl backdrop-blur-sm">
-          <h2 class="text-2xl font-semibold gradient-text mb-6">My GitHub</h2>
-          <p class="gradient-text mb-6">Check out the open-source projects, experiments, and code I'm working on.</p>
-          <a href="https://github.com/SarveshPatki" target="_blank" class="relative z-10 inline-block px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg text-white">Visit My GitHub →</a>
-        </div>
+  <!-- Header -->
+  <header class="w-full py-4 px-6 flex items-center justify-between glass card fade-in" style="animation-delay:.2s;position:relative;z-index:2">
+    <div class="flex items-center gap-3">
+      <img src="https://i.ibb.co/ZsFxdkQ/d075f8140e6c227ce55ed9caea97e36b.gif" alt="logo" class="w-10 h-10 rounded-md ring-1 ring-white/6"/>
+      <div>
+        <div class="font-semibold">Sarvesh Patki</div>
+        <div class="text-xs text-slate-300">Jr. Engineer • Cloud Enthusiast</div>
       </div>
     </div>
+
+    <nav class="hidden md:flex items-center gap-4 text-sm text-slate-200">
+      <a href="#projects" class="px-3 py-1 rounded-md hover:bg-white/3 transition">Projects</a>
+      <a href="#experience" class="px-3 py-1 rounded-md hover:bg-white/3 transition">Experience</a>
+      <a href="mailto:phonesarvesh95@gmail.com" class="px-3 py-1 btn-outline">Email</a>
+    </nav>
+
+    <div class="md:hidden">
+      <button class="p-2 rounded-md glass" aria-label="open menu">☰</button>
+    </div>
+  </header>
+
+  <main class="min-h-[80vh] flex items-center justify-center px-6 py-12" style="position:relative;z-index:2">
+    <section class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      <!-- left column -->
+      <aside class="md:col-span-1 glass p-6 fade-in" style="animation-delay:.6s">
+        <div class="flex flex-col items-center text-center space-y-4">
+          <img src="https://i.ibb.co/ZsFxdkQ/d075f8140e6c227ce55ed9caea97e36b.gif" alt="avatar" class="w-28 h-28 rounded-full ring-1 ring-white/8"/>
+          <div class="text-lg font-medium">Sarvesh Patki</div>
+          <div class="text-xs text-slate-300">Linux learner · Aspiring Cloud Engineer</div>
+
+          <div class="w-full mt-3 grid grid-cols-2 gap-3">
+            <a class="pill" href="https://github.com/SarveshPatki" target="_blank" rel="noreferrer">
+              <div class="inner"><img src="https://i.ibb.co/GQyvXfcH/github.png" class="w-5 h-5 rounded-full" alt="github"> <span class="text-sm">GitHub</span></div>
+            </a>
+
+            <a class="pill" href="https://discord.com/users/741184115981680702" target="_blank" rel="noreferrer">
+              <div class="inner"><img src="https://i.ibb.co/2Y5hfgk8/discord.jpg" class="w-5 h-5 rounded-full" alt="discord"> <span class="text-sm">Discord</span></div>
+            </a>
+
+            <a class="pill" href="mailto:phonesarvesh95@gmail.com" target="_blank" rel="noreferrer">
+              <div class="inner"><img src="https://i.ibb.co/9HSqjHZR/email.png" class="w-5 h-5 rounded-full" alt="email"> <span class="text-sm">Email</span></div>
+            </a>
+
+            <a class="pill" href="#" target="_blank" rel="noreferrer">
+              <div class="inner"><img src="https://i.ibb.co/fdxywY36/reddit.jpg" class="w-5 h-5 rounded-full" alt="maybe one in future"> <span class="text-sm">maybe one in future</span></div>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- right column -->
+      <div class="md:col-span-2 space-y-6">
+        <div class="glass p-8 fade-in card" style="animation-delay:1s">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 class="text-2xl md:text-3xl font-semibold leading-tight">
+                <span id="headline-text" class="gradient-text"></span>
+                <span id="headline-caret" class="caret" aria-hidden="true"></span>
+              </h1>
+              <p class="hero-sub mt-3">Passionate about reliable infrastructure, automation, and scalable hosting. I spend my time learning Linux internals, building deployment scripts and helping users get services online.</p>
+            </div>
+
+            <div class="text-right">
+              <div class="text-sm text-slate-300">Based in India</div>
+              <a href="https://github.com/SarveshPatki" target="_blank" class="mt-3 inline-block px-4 py-2 rounded-md bg-gradient-to-r from-[#60a5fa] to-[#2563eb] text-white font-medium">View GitHub</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div id="experience" class="glass p-6 fade-in" style="animation-delay:1.4s">
+          <h2 class="text-lg font-semibold gradient-text">Experience & Education</h2>
+
+          <div class="xp-list">
+            <div class="xp-item">
+              <div class="xp-role">Age</div>
+              <div class="xp-meta">18 years old</div>
+            </div>
+
+            <div class="xp-item">
+              <div class="xp-role">Education</div>
+              <div class="xp-meta links">Currently pursuing <strong>B.Sc. Data Science & Big Data Analytics</strong> — <a href="https://maps.app.goo.gl/8xWeNx8p3iBLaQcy5" target="_blank" rel="noreferrer">MIT-WPU (map)</a></div>
+            </div>
+
+            <div class="xp-item">
+              <div class="xp-role">Support & System Administration</div>
+              <div class="xp-meta">
+                5 years supporting users and services, and 2.5 years focused on system administration — maintaining uptime, handling escalations, and automating repetitive tasks to make operations smoother.
+              </div>
+            </div>
+
+            <div class="xp-item">
+              <div class="xp-role">Current roles</div>
+              <div class="xp-meta links">
+                Administrative at <a href="https://freezehost.pro/" target="_blank" rel="noreferrer">FreezeHost.pro</a> — free hosting initiative (since March 2025).<br>
+                Jr. Engineer at <a href="https://coderoasis.com/" target="_blank" rel="noreferrer">Coderoasis.com</a> — assisting with infrastructure and platform work.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projects -->
+        <div id="projects" class="glass p-6 fade-in" style="animation-delay:1.8s">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold">Latest projects</h3>
+            <a class="text-sm gradient-text" href="https://github.com/SarveshPatki">See all</a>
+          </div>
+          <ul class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <li class="p-3 border border-white/6 rounded-md">
+              <div class="font-medium">In-progress project</div>
+              <div class="text-xs text-slate-300">Work in progress — <a href="https://github.com/SarveshPatki/sarveshpatki.github.io/tree/main" target="_blank" class="underline text-white">site repository</a></div>
+            </li>
+            <li class="p-3 border border-white/6 rounded-md">
+              <div class="font-medium">personal-hosting</div>
+              <div class="text-xs text-slate-300">Guides & scripts for cheap hosting and automation</div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
   </main>
 
-  <footer class="text-center text-sm gradient-text py-8 px-4">
-    © 2025 Sarvesh Patki. All rights reserved. Design with ❤️ by @sarveshpatki
-  </footer>
+  <footer class="text-center py-8 text-sm text-slate-300" style="position:relative;z-index:2">© 2025 <span class="font-medium">Sarvesh Patki</span>. Made with curiosity.</footer>
 
   <script>
-    setTimeout(() => {
-      document.getElementById("typing").classList.add("done");
-    }, 5700);
+    // wait for fade-ins to finish (fallback 6s), then run a typing effect
+    (function(){
+      const fadeEls = Array.from(document.querySelectorAll('.fade-in'));
+      let remaining = fadeEls.length;
+      const maxTimeout = setTimeout(startTyping, 6000);
+
+      if(remaining === 0){
+        clearTimeout(maxTimeout);
+        startTyping();
+      } else {
+        fadeEls.forEach(el=>{
+          el.addEventListener('animationend', ()=>{
+            remaining -= 1;
+            if(remaining <= 0){ clearTimeout(maxTimeout); startTyping(); }
+          }, {once:true});
+        });
+      }
+
+      function startTyping(){
+        const el = document.getElementById('headline-text');
+        const caret = document.getElementById('headline-caret');
+        const text = "Hi! I'm Sarvesh Patki — learning Linux & building cloud tools";
+        let i = 0;
+        if(!el) return;
+        el.textContent = '';
+        el.classList.add('gradient-text');
+
+        const speed = 40;
+        const t = setInterval(()=>{
+          el.textContent += text[i++] || '';
+          if(i > text.length){
+            clearInterval(t);
+            setTimeout(()=> { if(caret) caret.classList.add('hide'); }, 250);
+          }
+        }, speed);
+      }
+    })();
   </script>
 </body>
 </html>
